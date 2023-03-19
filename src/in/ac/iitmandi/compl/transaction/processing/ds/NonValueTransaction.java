@@ -1,26 +1,24 @@
 /**
  * 
  */
-package in.ac.iitmandi.compl.transaction.processing;
+package in.ac.iitmandi.compl.transaction.processing.ds;
 
 import in.ac.iitmandi.compl.common.CommonUtils;
-import in.ac.iitmandi.compl.transaction.processing.ds.CustomerDetails;
-import in.ac.iitmandi.compl.transaction.processing.ds.JSONResult;
 
 /**
  * @author arjun
  *
  */
-public class ValueTransaction {
+public class NonValueTransaction {
 
 	private String TransactionID;
 	private CustomerDetails custDetails;
-	private PaymentInfo paymentInfo;
-	private PaymentInfo feeInfo;
+	private NonValuePaymentInfo paymentInfo;
+	private NonValuePaymentInfo feeInfo;
 	/**
 	 * 
 	 */
-	public ValueTransaction() {
+	public NonValueTransaction() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -30,15 +28,15 @@ public class ValueTransaction {
 	 * @param transactionStatus
 	 * @param transactionFee
 	 */
-	public ValueTransaction(String transactionID, CustomerDetails custDetails, PaymentInfo paymentInfo) {
+	public NonValueTransaction(String transactionID, CustomerDetails custDetails, NonValuePaymentInfo paymentInfo) {
 		this.TransactionID = transactionID;
 		this.custDetails = custDetails;
 		this.paymentInfo = paymentInfo;
-		this.feeInfo = new PaymentInfo(paymentInfo.getCustAccountBalance(),paymentInfo.getTransactionDate(),paymentInfo.getTransactionTime(),0,paymentInfo.getTransactionFeeRate(),false);
+		this.feeInfo = new NonValuePaymentInfo(paymentInfo.getCustAccountBalance(),paymentInfo.getTransactionDate(),paymentInfo.getTransactionTime(),0,paymentInfo.getTransactionFeeRate(),false);
 	}
 	
 	public double getTransactionAmount() {
-		return this.getPaymentInfo().getTransactionAmount();
+		return this.getNonValuePaymentInfo().getTransactionAmount();
 	}
 
 	public double getCustAcctBalance() {
@@ -46,9 +44,12 @@ public class ValueTransaction {
 	}
 
 	public boolean getTransactionStatus() {
-		return this.getPaymentInfo().isTransactionStatus();
+		return this.getNonValuePaymentInfo().isTransactionStatus();
 	}
 
+	protected void computeAverageTime(long iterTime) {
+		CommonUtils.averageTime+=iterTime;
+	}
 	/**
 	 * @return the transactionID
 	 */
@@ -77,36 +78,36 @@ public class ValueTransaction {
 		this.custDetails = custDetails;
 	}
 	
-	public PaymentInfo createNewPaymentObject(double processingFee) {
-		return new PaymentInfo(this.getPaymentInfo().getCustAccountBalance(), this.getPaymentInfo().getTransactionDate(), this.getPaymentInfo().getTransactionTime(), processingFee, this.getPaymentInfo().getTransactionFeeRate(), false); 
+	public NonValuePaymentInfo createNewPaymentObject(double processingFee) {
+		return new NonValuePaymentInfo(this.getNonValuePaymentInfo().getCustAccountBalance(), this.getNonValuePaymentInfo().getTransactionDate(), this.getNonValuePaymentInfo().getTransactionTime(), processingFee, this.getNonValuePaymentInfo().getTransactionFeeRate(), false); 
 		}
 
-	public void resetFeeInfo(PaymentInfo paymentInfo) {
-		this.setFeeInfo((PaymentInfo)paymentInfo);
+	public void resetFeeInfo(NonValuePaymentInfo paymentInfo) {
+		this.setFeeInfo((NonValuePaymentInfo)paymentInfo);
 	}
 
 	public void updateTransactionStatus(boolean status) {
-		this.setFeeInfo(new PaymentInfo(this.getFeeInfo().getCustAccountBalance(), this.getFeeInfo().getTransactionDate(), this.getFeeInfo().getTransactionTime(), this.getFeeInfo().getTransactionAmount(), this.getPaymentInfo().getTransactionFeeRate(), status));
+		this.setFeeInfo(new NonValuePaymentInfo(this.getFeeInfo().getCustAccountBalance(), this.getFeeInfo().getTransactionDate(), this.getFeeInfo().getTransactionTime(), this.getFeeInfo().getTransactionAmount(), this.getNonValuePaymentInfo().getTransactionFeeRate(), status));
 	}
 
-	public ValueTransaction convertToTransactionObject(JSONResult result) {
+	public NonValueTransaction convertToTransactionObject(JSONResult result) {
 		CustomerDetails cDetails = new CustomerDetails(result.getCustomerID(), result.getCustomerDOB(), result.getCustGender(), result.getCustLocation());
-		PaymentInfo pi = createValuePaymentInfo(result);
-		return new ValueTransaction(result.getTransactionID(), cDetails, pi);
+		NonValuePaymentInfo pi = createValueNonValuePaymentInfo(result);
+		return new NonValueTransaction(result.getTransactionID(), cDetails, pi);
 	}
 	
 	public double computeFieldSum(int n_iterations) {
 		return this.getFieldSum(n_iterations);
 	}
 	
-	private PaymentInfo createValuePaymentInfo(JSONResult result) {
+	private NonValuePaymentInfo createValueNonValuePaymentInfo(JSONResult result) {
 		double cAccBalance = 0;
 		if(result.getCustAccountBalance() != null && !result.getCustAccountBalance().isEmpty()) {
 			cAccBalance =  Double.parseDouble(result.getCustAccountBalance());
 		}
 		int paymentDate = CommonUtils.formatDateString(result.getTransactionDate());
 		int paymentTime = result.getTransactionTime();
-		return new PaymentInfo(cAccBalance, paymentDate, paymentTime, result.getTransactionAmount(), 0, false);
+		return new NonValuePaymentInfo(cAccBalance, paymentDate, paymentTime, result.getTransactionAmount(), 0, false);
 	}
 	
 	private double getFieldSum(int iterVal) {
@@ -118,11 +119,11 @@ public class ValueTransaction {
 //			i1 = System.nanoTime();
 			sum += this.getpaymentInfo().getCustAccountBalance();
 //			i2 = System.nanoTime();
-			sum += this.getPaymentInfo().getTransactionAmount();
+			sum += this.getNonValuePaymentInfo().getTransactionAmount();
 ////			i3 = System.nanoTime();
 			sum += this.getpaymentInfo().getTransactionDate();
 ////			i4 = System.nanoTime();
-			sum += this.getPaymentInfo().getTransactionFeeRate();
+			sum += this.getNonValuePaymentInfo().getTransactionFeeRate();
 ////			i5 = System.nanoTime();
 			sum += this.getpaymentInfo().getTransactionTime();
 //			i6 = System.nanoTime();
@@ -153,36 +154,36 @@ public class ValueTransaction {
 	/**
 	 * @return the paymentInfo
 	 */
-	public PaymentInfo getpaymentInfo() {
+	public NonValuePaymentInfo getpaymentInfo() {
 		return paymentInfo;
 	}
 
 	/**
 	 * @param paymentInfo the paymentInfo to set
 	 */
-	public void setpaymentInfo(PaymentInfo paymentInfo) {
+	public void setpaymentInfo(NonValuePaymentInfo paymentInfo) {
 		this.paymentInfo = paymentInfo;
 	}
 
 	/**
-	 * @return the PaymentInfo
+	 * @return the NonValuePaymentInfo
 	 */
-	public PaymentInfo getPaymentInfo() {
+	public NonValuePaymentInfo getNonValuePaymentInfo() {
 		return paymentInfo;
 	}
 
 	/**
-	 * @param PaymentInfo the PaymentInfo to set
+	 * @param NonValuePaymentInfo the NonValuePaymentInfo to set
 	 */
-	public void setPaymentInfo(PaymentInfo PaymentInfo) {
-		this.paymentInfo = PaymentInfo;
+	public void setNonValuePaymentInfo(NonValuePaymentInfo NonValuePaymentInfo) {
+		this.paymentInfo = NonValuePaymentInfo;
 	}
 
-	public PaymentInfo getFeeInfo() {
+	public NonValuePaymentInfo getFeeInfo() {
 		return feeInfo;
 	}
 
-	public void setFeeInfo(PaymentInfo feeInfo) {
+	public void setFeeInfo(NonValuePaymentInfo feeInfo) {
 		this.feeInfo = feeInfo;
 	}
 

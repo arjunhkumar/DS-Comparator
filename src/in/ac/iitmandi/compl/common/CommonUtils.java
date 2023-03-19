@@ -90,4 +90,16 @@ public class CommonUtils {
 	public static void computeAverageTime(long iterTime) {
 		averageTime+=iterTime;
 	}
+
+	public static boolean validateArgs(String[] args) {
+		if(! (args.length == 1)) {
+			System.out.println(generateErrorMsg("No. of arguments is incorrect."));
+			System.out.println(generateErrorMsg("Exiting without executing."));
+			return false;
+		}
+		String iterSize = args[0];
+		int iterVal = Integer.parseInt(iterSize);
+		GlobalStorage.ITERSIZE = iterVal;
+		return true;
+	}
 }

@@ -1,14 +1,14 @@
 /**
  * 
  */
-package in.ac.iitmandi.compl.transaction.processing;
+package in.ac.iitmandi.compl.transaction.processing.ds;
 
 
 /**
  * @author arjun
  *
  */
-public primitive class PaymentInfo {
+public class NonValuePaymentInfo{
 
 	private final double CustAccountBalance;
 	private final int TransactionDate;
@@ -16,10 +16,12 @@ public primitive class PaymentInfo {
 	private final double TransactionAmount;
 	private final float TransactionFeeRate;
 	private final boolean TransactionStatus;
+//	public final double TransactionFee;
+	
 	/**
 	 * 
 	 */
-	public PaymentInfo() {
+	public NonValuePaymentInfo() {
 		this.CustAccountBalance = 0d;
 		this.TransactionDate = 0;
 		this.TransactionTime = 0;
@@ -37,7 +39,7 @@ public primitive class PaymentInfo {
 	 * @param transactionFeeRate
 	 * @param transactionStatus
 	 */
-	public PaymentInfo(double custAccountBalance, int transactionDate, int transactionTime, double transactionAmount,
+	public NonValuePaymentInfo(double custAccountBalance, int transactionDate, int transactionTime, double transactionAmount,
 			float transactionFeeRate, boolean transactionStatus) {
 		CustAccountBalance = custAccountBalance;
 		TransactionDate = transactionDate;
@@ -48,8 +50,6 @@ public primitive class PaymentInfo {
 //		TransactionFee = transactionFee;
 	}
 
-	
-	
 	/**
 	 * @return the custAccountBalance
 	 */
@@ -92,16 +92,16 @@ public primitive class PaymentInfo {
 		return TransactionStatus;
 	}
 	
-	public PaymentInfo genNewPaymentInfo(float feePercent) {
-		return new PaymentInfo(CustAccountBalance, TransactionDate, TransactionTime, TransactionAmount, feePercent, TransactionStatus); 
+	public NonValuePaymentInfo genNewPaymentInfo(float feePercent) {
+		return new NonValuePaymentInfo(CustAccountBalance, TransactionDate, TransactionTime, TransactionAmount, feePercent, TransactionStatus); 
 	}
 	
-	public PaymentInfo genNewPaymentInfo(boolean status) {
-		return new PaymentInfo(CustAccountBalance, TransactionDate, TransactionTime, TransactionAmount, TransactionFeeRate, status); 
+	public NonValuePaymentInfo genNewPaymentInfo(boolean status) {
+		return new NonValuePaymentInfo(CustAccountBalance, TransactionDate, TransactionTime, TransactionAmount, TransactionFeeRate, status); 
 	}
 	
-	public PaymentInfo genNewPaymentInfo(float feePercent, boolean status) {
-		return new PaymentInfo(CustAccountBalance, TransactionDate, TransactionTime, TransactionAmount, feePercent, status); 
+	public NonValuePaymentInfo genNewPaymentInfo(float feePercent, boolean status) {
+		return new NonValuePaymentInfo(CustAccountBalance, TransactionDate, TransactionTime, TransactionAmount, feePercent, status); 
 	}
 	
 //	public PaymentInfo genNewPaymentInfo(double fee, boolean status) {

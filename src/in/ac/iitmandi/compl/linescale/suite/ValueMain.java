@@ -27,13 +27,18 @@ public class ValueMain {
 	public static void main(String[] args) {
 		long startTime;
 		long finishTime;
-		startTime = System.currentTimeMillis();
-		Dataset ds = CommonUtils.loadDataSet();
-		ValueMain mainObj = new ValueMain();
-		mainObj.intializeDataPoints(ds);
-		mainObj.runExperiments();
-		finishTime = System.currentTimeMillis();
-		System.out.println(CommonUtils.generateLogMsg(String.format("Total execution took %d ms", finishTime - startTime)));
+		if(CommonUtils.validateArgs(args)) {
+			startTime = System.currentTimeMillis();
+			Dataset ds = CommonUtils.loadDataSet();
+			ValueMain mainObj = new ValueMain();
+			mainObj.intializeDataPoints(ds);
+			mainObj.runExperiments();
+			finishTime = System.currentTimeMillis();
+			System.out.println(CommonUtils.generateLogMsg(
+					String.format("Average time for field sum computation:"
+							+ " %d ns", (CommonUtils.averageTime/(2*mainObj.vLineList.size())))));
+			System.out.println(CommonUtils.generateLogMsg(String.format("Total execution took %d ms", finishTime - startTime)));
+		}
 	}
 
 	
@@ -111,29 +116,11 @@ public class ValueMain {
 		startTime = System.nanoTime();
 		double sum = 0;
 		for(int i =0; i<GlobalStorage.ITERSIZE;i++) {
-//			i1 = System.nanoTime();
 			sum += line.getE().getX();
-//			i2 = System.nanoTime();
 			sum += line.getE().getY();
-////			i3 = System.nanoTime();
 		}
 		finishTime = System.nanoTime();
 		CommonUtils.computeAverageTime(finishTime - startTime);
-//		System.out.println(CommonUtils.generateLogMsg(
-//				 String.format("I0 "
-//						+ "%d ms", i2 - i1)));
-//		System.out.println(CommonUtils.generateLogMsg(
-//				String.format("I1 "
-//						+ "%d ms", i3 - i2)));
-//		System.out.println(CommonUtils.generateLogMsg(
-//				String.format("I2 "
-//						+ "%d ms", i4 - i3)));
-//		System.out.println(CommonUtils.generateLogMsg(
-//				String.format("I3 "
-//						+ "%d ms", i5 - i4)));
-//		System.out.println(CommonUtils.generateLogMsg(
-//				String.format("I4 "
-//						+ "%d ms", i6 - i5)));
 		System.out.println(CommonUtils.generateLogMsg(
 				String.format("Field sum computation took "
 						+ "%d ns", finishTime - startTime)));
@@ -146,29 +133,11 @@ public class ValueMain {
 		startTime = System.nanoTime();
 		double sum = 0;
 		for(int i =0; i<GlobalStorage.ITERSIZE;i++) {
-//			i1 = System.nanoTime();
 			sum += line.getS().getX();
-//			i2 = System.nanoTime();
 			sum += line.getS().getY();
-////			i3 = System.nanoTime();
 		}
 		finishTime = System.nanoTime();
 		CommonUtils.computeAverageTime(finishTime - startTime);
-//		System.out.println(CommonUtils.generateLogMsg(
-//				 String.format("I0 "
-//						+ "%d ms", i2 - i1)));
-//		System.out.println(CommonUtils.generateLogMsg(
-//				String.format("I1 "
-//						+ "%d ms", i3 - i2)));
-//		System.out.println(CommonUtils.generateLogMsg(
-//				String.format("I2 "
-//						+ "%d ms", i4 - i3)));
-//		System.out.println(CommonUtils.generateLogMsg(
-//				String.format("I3 "
-//						+ "%d ms", i5 - i4)));
-//		System.out.println(CommonUtils.generateLogMsg(
-//				String.format("I4 "
-//						+ "%d ms", i6 - i5)));
 		System.out.println(CommonUtils.generateLogMsg(
 				String.format("Field sum computation took "
 						+ "%d ns", finishTime - startTime)));

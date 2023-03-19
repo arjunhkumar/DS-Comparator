@@ -1,7 +1,7 @@
 /**
  * 
  */
-package in.ac.iitmandi.compl.transaction.processing;
+package in.ac.iitmandi.compl.transaction.processing.suite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ import in.ac.iitmandi.compl.common.CommonUtils;
 import in.ac.iitmandi.compl.common.GlobalStorage;
 import in.ac.iitmandi.compl.transaction.processing.ds.Dataset;
 import in.ac.iitmandi.compl.transaction.processing.ds.JSONResult;
+import in.ac.iitmandi.compl.transaction.processing.ds.ValueTransaction;
 
 
 
@@ -17,7 +18,7 @@ import in.ac.iitmandi.compl.transaction.processing.ds.JSONResult;
  * @author arjun
  *
  */
-public class NonValueMain{
+public class ValueMain{
 
 	/**
 	 * @param args
@@ -26,8 +27,8 @@ public class NonValueMain{
 		long startTime;
 		long finishTime;
 		startTime = System.currentTimeMillis();
-		NonValueMain mainObj = new NonValueMain();
-		if(mainObj.validateArgs(args)) {
+		ValueMain mainObj = new ValueMain();
+		if(CommonUtils.validateArgs(args)) {
 			startTime = System.currentTimeMillis();
 			Dataset ds = CommonUtils.loadDataSet();
 			mainObj.executeAnalysis(ds);
@@ -42,7 +43,7 @@ public class NonValueMain{
 	public void executeAnalysis(Dataset ds) {
 		long startTime;
 		long finishTime;
-		List<NonValueTransaction> valueList = convertToTransaction(ds, new NonValueTransaction());
+		List<ValueTransaction> valueList = convertToTransaction(ds, new ValueTransaction());
 		startTime = System.currentTimeMillis();
 		double sum =0;
 		for(int i = 1; i<=GlobalStorage.ITERSIZE; i++) {
@@ -54,28 +55,16 @@ public class NonValueMain{
 	}
 
 	
-	 boolean validateArgs(String[] args) {
-		if(! (args.length == 1)) {
-			System.out.println(CommonUtils.generateErrorMsg("No. of arguments is incorrect."));
-			System.out.println(CommonUtils.generateErrorMsg("Exiting without executing."));
-			return false;
-		}
-		String iterSize = args[0];
-		int iterVal = Integer.parseInt(iterSize);
-		GlobalStorage.ITERSIZE = iterVal;
-		return true;
-	}
-	
-	 List<NonValueTransaction> convertToTransaction(Dataset ds,NonValueTransaction transaction) {
+	 List<ValueTransaction> convertToTransaction(Dataset ds,ValueTransaction transaction) {
 		long startTime;
 		long finishTime;
 		startTime = System.currentTimeMillis();
-		List<NonValueTransaction> transactionList = null;
+		List<ValueTransaction> transactionList = null;
 		if(null != ds && null != ds.getResults() && ds.getResults().length > 0) {
 			transactionList = new ArrayList<>();
 			for (JSONResult transactionData : ds.getResults()) {
-				NonValueTransaction nonNonValueTransaction = transaction.convertToTransactionObject(transactionData);
-				transactionList.add(nonNonValueTransaction);
+				ValueTransaction nonValueTransaction = transaction.convertToTransactionObject(transactionData);
+				transactionList.add(nonValueTransaction);
 			}
 		}
 		finishTime = System.currentTimeMillis();
@@ -85,7 +74,7 @@ public class NonValueMain{
 		return transactionList;
 	}
 	
-	 double processTransactions(List<NonValueTransaction> valueList, int divident) {
+	 double processTransactions(List<ValueTransaction> valueList, int divident) {
 		double blackHole;
 		double avgTransactionAmt = computeAverageTransactionAmount(valueList)/divident;
 //		System.out.println(CommonUtils.generateLogMsg("Average Transaction Amount: "+avgTransactionAmt));
@@ -97,19 +86,19 @@ public class NonValueMain{
 		int numberOfCustomers = computeNumberOfCustomers(updateTransactions(valueList,divident/GlobalStorage.ITERSIZE));
 //		numberOfCustomers += computeNumberOfCustomers(updateTransactions(valueList,(divident*2)/GlobalStorage.ITERSIZE));
 //		System.out.println(CommonUtils.generateLogMsg("No. of transactions successfull are: "+numberOfCustomers));
-		double accessVal = increasePrimitiveAccessOperation(valueList,10000);
+		double accessVal = increasePrimitiveAccessOperation(valueList,GlobalStorage.ITERSIZE);
 		blackHole =  avgTransactionAmt + avgProcessingFee +numberOfCustomers+ accessVal;
 //		blackHole = accessVal;
 		return blackHole;
 	}
 	
-	 double computeAverageTransactionAmount(List<NonValueTransaction> valueList) {
+	 double computeAverageTransactionAmount(List<ValueTransaction> valueList) {
 		long startTime;
 		long finishTime;
 		startTime = System.currentTimeMillis();
 		if(null != valueList && !valueList.isEmpty()) {
 			double sum = 0;
-			for(NonValueTransaction valueTransaction : valueList) {
+			for(ValueTransaction valueTransaction : valueList) {
 				double transactionAmt = valueTransaction.getTransactionAmount();
 				sum += transactionAmt;
 			}
@@ -123,13 +112,13 @@ public class NonValueMain{
 		return 0;
 	}
 	
-	 double computeAverageProcessingFee(List<NonValueTransaction> valueList, float rate) {
+	 double computeAverageProcessingFee(List<ValueTransaction> valueList, float rate) {
 		long startTime;
 		long finishTime;
 		startTime = System.currentTimeMillis();
 		if(null != valueList && !valueList.isEmpty()) {
 			double sum = 0;
-			for(NonValueTransaction valueTransaction : valueList) {
+			for(ValueTransaction valueTransaction : valueList) {
 				double transactionAmt = valueTransaction.getTransactionAmount();
 				double processingFee = transactionAmt*rate;
 				sum+=processingFee;
@@ -143,7 +132,7 @@ public class NonValueMain{
 		return 0;
 	}
 	
-	 List<NonValueTransaction> updateTransactions(List<NonValueTransaction> workList, int rate) {
+	 List<ValueTransaction> updateTransactions(List<ValueTransaction> workList, int rate) {
 		long startTime;
 		long finishTime;
 		long i0 = 0;
@@ -152,7 +141,7 @@ public class NonValueMain{
 		long i3 = 0;
 		startTime = System.currentTimeMillis();
 		if(null != workList && !workList.isEmpty()) {
-			for(NonValueTransaction valueTransaction : workList) {
+			for(ValueTransaction valueTransaction : workList) {
 				i0 = System.currentTimeMillis();
 				double transactionAmt = valueTransaction.getTransactionAmount();
 				double processingFee = transactionAmt*rate;
@@ -185,13 +174,13 @@ public class NonValueMain{
 		return workList;
 	}
 
-	 int computeNumberOfCustomers(List<NonValueTransaction> updateTransactions) {
+	 int computeNumberOfCustomers(List<ValueTransaction> updateTransactions) {
 		long startTime;
 		long finishTime;
 		startTime = System.currentTimeMillis();
 		if(null != updateTransactions && !updateTransactions.isEmpty()) {
 			int noOfCustomers = 0;
-			for(NonValueTransaction valueTransaction : updateTransactions) {
+			for(ValueTransaction valueTransaction : updateTransactions) {
 				if(valueTransaction.getTransactionStatus()) {
 					noOfCustomers++;
 				}
@@ -205,7 +194,7 @@ public class NonValueMain{
 		return 0;
 	}
 	
-	 double increasePrimitiveAccessOperation(List<NonValueTransaction> valueList,int randomInt) {
+	 double increasePrimitiveAccessOperation(List<ValueTransaction> valueList,int randomInt) {
 		long startTime;
 		long finishTime;
 //		long i1 =0;
@@ -213,7 +202,7 @@ public class NonValueMain{
 		startTime = System.currentTimeMillis();
 		if(null != valueList && !valueList.isEmpty()) {
 			double sum = 0;
-			for(NonValueTransaction valueTransaction : valueList) {
+			for(ValueTransaction valueTransaction : valueList) {
 //				i1 = System.currentTimeMillis();
 				double transactionAmt = valueTransaction.computeFieldSum(randomInt);
 				sum += transactionAmt;
