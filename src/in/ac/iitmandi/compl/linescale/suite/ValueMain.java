@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import in.ac.iitmandi.compl.common.CommonUtils;
-import in.ac.iitmandi.compl.common.GlobalStorage;
+import in.ac.iitmandi.compl.linescale.ds.NonValueLine;
 import in.ac.iitmandi.compl.linescale.ds.ValueLine;
 import in.ac.iitmandi.compl.linescale.ds.ValuePoint;
 import in.ac.iitmandi.compl.transaction.processing.ds.Dataset;
@@ -21,6 +21,7 @@ public class ValueMain {
 
 	List<ValueLine> vLineList;
 	List<ValueLine> scaledList;
+	long result;
 	/**
 	 * @param args
 	 */
@@ -34,6 +35,7 @@ public class ValueMain {
 			mainObj.intializeDataPoints(ds);
 			mainObj.runExperiments();
 			finishTime = System.currentTimeMillis();
+			System.out.println(CommonUtils.generateLogMsg("Result: "+mainObj.result));
 			System.out.println(CommonUtils.generateLogMsg(
 					String.format("Average time for field sum computation:"
 							+ " %d ns", (CommonUtils.averageTime/(2*mainObj.vLineList.size())))));
@@ -56,13 +58,16 @@ public class ValueMain {
 		int scale = 1;
 		int sum = 0;
 		for(ValueLine line: vLineList) {
+			long startTime;
+			long finishTime;
+			startTime = System.nanoTime();
 			scale = scaleLine(scale, line);
 			sum += getFieldSum1(line);
 			sum += getFieldSum2(line);
+			finishTime = System.nanoTime();
+			CommonUtils.computeAverageTime(finishTime - startTime);
 		}
-		System.out.println(CommonUtils.generateLogMsg("Size: "+vLineList.size()));
-		System.out.println(CommonUtils.generateLogMsg("Expt completed. Result: "+(scaledList.hashCode()+sum)));
-	
+		this.result = scaledList.hashCode()+sum;
 	}
 	
 	private int scaleLine(int scale, ValueLine line) {
@@ -111,36 +116,20 @@ public class ValueMain {
 	}
 	
 	private double getFieldSum1(ValueLine line) {
-		long startTime;
-		long finishTime;
-		startTime = System.nanoTime();
 		double sum = 0;
-		for(int i =0; i<GlobalStorage.ITERSIZE;i++) {
-			sum += line.getE().getX();
-			sum += line.getE().getY();
+		for(int i =0; i<CommonUtils.ITERSIZE;i++) {
+			sum += line.e.x;
+			sum += line.e.y;
 		}
-		finishTime = System.nanoTime();
-		CommonUtils.computeAverageTime(finishTime - startTime);
-		System.out.println(CommonUtils.generateLogMsg(
-				String.format("Field sum computation took "
-						+ "%d ns", finishTime - startTime)));
 		return sum;
 	}
 	
 	private double getFieldSum2(ValueLine line) {
-		long startTime;
-		long finishTime;
-		startTime = System.nanoTime();
 		double sum = 0;
-		for(int i =0; i<GlobalStorage.ITERSIZE;i++) {
+		for(int i =0; i<CommonUtils.ITERSIZE;i++) {
 			sum += line.getS().getX();
 			sum += line.getS().getY();
 		}
-		finishTime = System.nanoTime();
-		CommonUtils.computeAverageTime(finishTime - startTime);
-		System.out.println(CommonUtils.generateLogMsg(
-				String.format("Field sum computation took "
-						+ "%d ns", finishTime - startTime)));
 		return sum;
 	}
 

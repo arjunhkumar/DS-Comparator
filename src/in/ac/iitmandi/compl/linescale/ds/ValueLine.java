@@ -9,8 +9,8 @@ package in.ac.iitmandi.compl.linescale.ds;
  */
 public class ValueLine {
 
-	private ValuePoint s;
-	private ValuePoint e;
+	public ValuePoint s;
+	public ValuePoint e;
 	
 	/**
 	 * @param s

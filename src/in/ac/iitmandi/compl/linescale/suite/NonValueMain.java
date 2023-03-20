@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import in.ac.iitmandi.compl.common.CommonUtils;
-import in.ac.iitmandi.compl.common.GlobalStorage;
 import in.ac.iitmandi.compl.linescale.ds.NonValueLine;
 import in.ac.iitmandi.compl.linescale.ds.NonValuePoint;
 import in.ac.iitmandi.compl.transaction.processing.ds.Dataset;
@@ -21,6 +20,7 @@ public class NonValueMain {
 
 	List<NonValueLine> vLineList;
 	List<NonValueLine> scaledList;
+	long result;
 	/**
 	 * @param args
 	 */
@@ -34,6 +34,7 @@ public class NonValueMain {
 			mainObj.intializeDataPoints(ds);
 			mainObj.runExperiments();
 			finishTime = System.currentTimeMillis();
+			System.out.println(CommonUtils.generateLogMsg("Result: "+mainObj.result));
 			System.out.println(CommonUtils.generateLogMsg(
 					String.format("Average time for field sum computation:"
 							+ " %d ns", (CommonUtils.averageTime/(2*mainObj.vLineList.size())))));
@@ -56,50 +57,18 @@ public class NonValueMain {
 		int scale = 1;
 		int sum = 0;
 		for(NonValueLine line: vLineList) {
+			long startTime;
+			long finishTime;
+			startTime = System.nanoTime();
 			scale = scaleLine(scale, line);
 			sum += getFieldSum1(line);
 			sum += getFieldSum2(line);
+			finishTime = System.nanoTime();
+			CommonUtils.computeAverageTime(finishTime - startTime);
 		}
-		System.out.println(CommonUtils.generateLogMsg("Size: "+vLineList.size()));
-		System.out.println(CommonUtils.generateLogMsg("Expt completed. Result: "+(scaledList.hashCode()+sum)));
+		this.result = scaledList.hashCode()+sum;
 	}
 	
-	private double getFieldSum1(NonValueLine line) {
-		long startTime;
-		long finishTime;
-		startTime = System.nanoTime();
-		double sum = 0;
-		for(int i =0; i<GlobalStorage.ITERSIZE;i++) {
-			sum += line.getE().getX();
-			sum += line.getE().getY();
-		}
-		finishTime = System.nanoTime();
-		CommonUtils.computeAverageTime(finishTime - startTime);
-		System.out.println(CommonUtils.generateLogMsg(
-				String.format("Field sum computation took "
-						+ "%d ns", finishTime - startTime)));
-		return sum;
-	}
-
-	private double getFieldSum2(NonValueLine line) {
-		long startTime;
-		long finishTime;
-		startTime = System.nanoTime();
-		double sum = 0;
-		for(int i =0; i<GlobalStorage.ITERSIZE;i++) {
-			sum += line.getE().getX();
-			sum += line.getE().getY();
-		}
-		finishTime = System.nanoTime();
-		CommonUtils.computeAverageTime(finishTime - startTime);
-		System.out.println(CommonUtils.generateLogMsg(
-				String.format("Field sum computation took "
-						+ "%d ns", finishTime - startTime)));
-		return sum;
-	}
-
-	
-
 	private int scaleLine(int scale, NonValueLine line) {
 		NonValueLine newLine = line.scaleLine(scale);
 		addToScaledLines(newLine);
@@ -148,4 +117,23 @@ public class NonValueMain {
 		int y = cAccBalance.intValue();
 		return new NonValuePoint(x, y);
 	}
+	
+	private double getFieldSum1(NonValueLine line) {
+		double sum = 0;
+		for(int i =0; i<CommonUtils.ITERSIZE;i++) {
+			sum += line.getE().getX();
+			sum += line.getE().getY();
+		}
+		return sum;
+	}
+
+	private double getFieldSum2(NonValueLine line) {
+		double sum = 0;
+		for(int i =0; i<CommonUtils.ITERSIZE;i++) {
+			sum += line.getE().getX();
+			sum += line.getE().getY();
+		}
+		return sum;
+	}
+
 }

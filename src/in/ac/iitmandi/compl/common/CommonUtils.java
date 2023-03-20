@@ -25,6 +25,7 @@ public class CommonUtils {
 	public static final String JSON_PATH = "./dataset/transactions_formatted.json";
 	private static final String PREPENDERRORVAL = "Error : ";
 	private static final String PREPENDLOGVAL = "Log : ";
+	public static int ITERSIZE;
 	/**
 	 * Private Constructor for singleton implementation
 	 */
@@ -99,7 +100,18 @@ public class CommonUtils {
 		}
 		String iterSize = args[0];
 		int iterVal = Integer.parseInt(iterSize);
-		GlobalStorage.ITERSIZE = iterVal;
+		CommonUtils.ITERSIZE = iterVal;
 		return true;
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void setIterVal(String[] args) {
+		if(args.length > 0) {
+			String iterSize = args[0];
+			int iterVal = Integer.parseInt(iterSize);
+			ITERSIZE = iterVal;
+		}
 	}
 }

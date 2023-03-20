@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.ac.iitmandi.compl.common.CommonUtils;
-import in.ac.iitmandi.compl.common.GlobalStorage;
 import in.ac.iitmandi.compl.transaction.processing.ds.Dataset;
 import in.ac.iitmandi.compl.transaction.processing.ds.JSONResult;
 import in.ac.iitmandi.compl.transaction.processing.ds.NonValueTransaction;
@@ -34,7 +33,7 @@ public class NonValueMain{
 			mainObj.executeAnalysis(ds);
 			System.out.println(CommonUtils.generateLogMsg(
 					String.format("Average time for field sum computation:"
-							+ " %d ns", (CommonUtils.averageTime/GlobalStorage.ITERSIZE))));
+							+ " %d ns", (CommonUtils.averageTime/CommonUtils.ITERSIZE))));
 			finishTime = System.currentTimeMillis();
 			System.out.println(CommonUtils.generateLogMsg(String.format("Total execution took %d ms", finishTime - startTime)));
 		}
@@ -46,9 +45,9 @@ public class NonValueMain{
 		List<NonValueTransaction> valueList = convertToTransaction(ds, new NonValueTransaction());
 		startTime = System.currentTimeMillis();
 		double sum =0;
-		for(int i = 1; i<=GlobalStorage.ITERSIZE; i++) {
-			sum += processTransactions(valueList,i);
-		}
+//		for(int i = 1; i<=GlobalStorage.ITERSIZE; i++) {
+			sum += processTransactions(valueList,1);
+//		}
 		System.out.println("Final value: "+sum);
 		finishTime = System.currentTimeMillis();
 		System.out.println(CommonUtils.generateLogMsg(String.format("Analysis execution took %d ms", finishTime - startTime)));
@@ -76,17 +75,17 @@ public class NonValueMain{
 	
 	 double processTransactions(List<NonValueTransaction> valueList, int divident) {
 		double blackHole;
-		double avgTransactionAmt = computeAverageTransactionAmount(valueList)/divident;
+		double avgTransactionAmt = computeAverageTransactionAmount(valueList)/CommonUtils.ITERSIZE;
 //		System.out.println(CommonUtils.generateLogMsg("Average Transaction Amount: "+avgTransactionAmt));
 //		List<AbstractTransaction> workList = new ArrayList<>(valueList);
-		double avgProcessingFee = computeAverageProcessingFee(valueList,divident/GlobalStorage.ITERSIZE);
+		double avgProcessingFee = computeAverageProcessingFee(valueList,CommonUtils.ITERSIZE);
 //		avgProcessingFee += computeAverageProcessingFee(valueList,(divident*2)/GlobalStorage.ITERSIZE);
 //		System.out.println(CommonUtils.generateLogMsg("Average processing fee: "+avgProcessingFee));
 //		List<AbstractTransaction> workList1 = new ArrayList<>(workList);
-		int numberOfCustomers = computeNumberOfCustomers(updateTransactions(valueList,divident/GlobalStorage.ITERSIZE));
+		int numberOfCustomers = computeNumberOfCustomers(updateTransactions(valueList,CommonUtils.ITERSIZE));
 //		numberOfCustomers += computeNumberOfCustomers(updateTransactions(valueList,(divident*2)/GlobalStorage.ITERSIZE));
 //		System.out.println(CommonUtils.generateLogMsg("No. of transactions successfull are: "+numberOfCustomers));
-		double accessVal = increasePrimitiveAccessOperation(valueList,GlobalStorage.ITERSIZE);
+		double accessVal = increasePrimitiveAccessOperation(valueList,CommonUtils.ITERSIZE);
 		blackHole =  avgTransactionAmt + avgProcessingFee +numberOfCustomers+ accessVal;
 //		blackHole = accessVal;
 		return blackHole;

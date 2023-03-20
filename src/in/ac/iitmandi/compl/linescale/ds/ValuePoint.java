@@ -7,10 +7,10 @@ package in.ac.iitmandi.compl.linescale.ds;
  * @author arjun
  *
  */
-public primitive  class ValuePoint {
+public primitive class ValuePoint {
 
-	private final int x;
-	private final int y;
+	public int x;
+	public int y;
 	
 	public ValuePoint() {
 		this.x = 0;

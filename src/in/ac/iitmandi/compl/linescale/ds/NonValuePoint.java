@@ -9,8 +9,8 @@ package in.ac.iitmandi.compl.linescale.ds;
  */
 public class NonValuePoint {
 	
-	private final int x;
-	private final int y;
+	private int x;
+	private int y;
 	
 	public NonValuePoint() {
 		this.x = 0;
