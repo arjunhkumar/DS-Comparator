@@ -9,8 +9,8 @@ package in.ac.iitmandi.compl.linescale.ds;
  */
 public primitive class ValuePoint {
 
-	public final int x;
-	public final int y;
+	public int x;
+	public int y;
 	
 	public ValuePoint() {
 		this.x = 0;
