@@ -120,18 +120,22 @@ public class NonValueMain {
 	
 	private double getFieldSum1(NonValueLine line) {
 		double sum = 0;
+//		int x = line.e.x;
+//		int y = line.e.y;
 		for(int i =0; i<CommonUtils.ITERSIZE;i++) {
-			sum += line.getE().getX();
-			sum += line.getE().getY();
+			sum += line.e.x;
+			sum += line.e.y;
 		}
 		return sum;
 	}
 
 	private double getFieldSum2(NonValueLine line) {
 		double sum = 0;
+//		int x = line.getS().getX();
+//		int y = line.getS().getY();
 		for(int i =0; i<CommonUtils.ITERSIZE;i++) {
-			sum += line.getE().getX();
-			sum += line.getE().getY();
+			sum += line.getS().getX();
+			sum += line.getS().getY();
 		}
 		return sum;
 	}

@@ -9,8 +9,8 @@ package in.ac.iitmandi.compl.linescale.ds;
  */
 public class NonValueLine {
 
-	private NonValuePoint s;
-	private NonValuePoint e;
+	public  NonValuePoint s;
+	public  NonValuePoint e;
 	
 	/**
 	 * @param s

@@ -21,7 +21,7 @@ import in.ac.iitmandi.compl.transaction.processing.ds.Dataset;
 public class CommonUtils {
 
 	static CommonUtils commonUtils = null;
-	public static long averageTime;
+	public static long averageTime = 0;
 	public static final String JSON_PATH = "./dataset/transactions_formatted.json";
 	private static final String PREPENDERRORVAL = "Error : ";
 	private static final String PREPENDLOGVAL = "Log : ";
