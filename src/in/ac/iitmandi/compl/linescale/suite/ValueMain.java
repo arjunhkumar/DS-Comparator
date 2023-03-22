@@ -117,22 +117,22 @@ public class ValueMain {
 	
 	private double getFieldSum1(ValueLine line) {
 		double sum = 0;
-//		int x = line.e.x;
-//		int y = line.e.y;
+		int x = line.e.x;
+		int y = line.e.y;
 		for(int i =0; i<CommonUtils.ITERSIZE;i++) {
-			sum += line.e.x;
-			sum += line.e.y;
+			sum += x;
+			sum += y;
 		}
 		return sum;
 	}
 	
 	private double getFieldSum2(ValueLine line) {
 		double sum = 0;
-//		int x = line.getS().getX();
-//		int y = line.getS().getY();
+		int x = line.getS().getX();
+		int y = line.getS().getY();
 		for(int i =0; i<CommonUtils.ITERSIZE;i++) {
-			sum += line.getS().getX();
-			sum += line.getS().getY();
+			sum += x;
+			sum += y;
 		}
 		return sum;
 	}
